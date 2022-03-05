@@ -17,6 +17,7 @@ imput LoginInput{
     password : String 
 }
 type Query {
+    user (id :ID!): User
     
 }
 type Mutation {
