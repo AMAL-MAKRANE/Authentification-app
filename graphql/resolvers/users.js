@@ -50,6 +50,36 @@ module.exports = {
                 ...res._doc
             };
         },
+        async loginUser(_, { loginInput: { email, password } }) {
+            /* Do input validation
+            if (!(email && password)) {
+                res.status(400).send("All input is required");
+            }
+            */
+            const user = await User.findOne({ email });
+
+            if (user && (await bcrypt.compare(password, user.password))) {
+                // Create token
+                const token = jwt.sign(
+                    { user_id: user._id, email },
+                    "UNSAFESTRING",
+                    {
+                        expiresIn: "2h",
+                    }
+                );
+
+                // save user token
+                user.token = token;
+
+                return {
+                    id: user.id,
+                    ...user._doc
+                }
+            } else {
+                throw new ApolloError('Incorrect password', 'INCORRECT_PASSWORD');
+            }
+        }
+
 
     },
     Query: {

@@ -21,7 +21,8 @@ type Query {
     
 }
 type Mutation {
-    registerUser(registerImput: RegisterInput : RegisterInput) : User
+    registerUser(registerImput: RegisterInput ) : User
+    loginUser(loginImput: LoginInput ) : User
 
 }
 `
