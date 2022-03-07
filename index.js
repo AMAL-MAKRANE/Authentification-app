@@ -1,28 +1,22 @@
-const { ApolloServer, PubSub } = require("apollo-server");
+import { ApolloServer } from 'apollo-server';
+import mongoose from 'mongoose';
 
-const mongoose = require("mongoose");
+import typeDefs from './graphql/typeDefs.js';
+import resolvers from './graphql/resolvers';
 
-const { MONGODB } = require("./config.js");
+const MONGODB = "mongodb+srv://cluster0.mjcuc.mongodb.net/myFirstDatabase";
 
-const pubsub = new PubSub();
-
-const PORT = process.env.PORT || 4000;
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers,
-    context: ({ req }) => ({ req, pubsub }),
+    resolvers
 });
 
-mongoose
-    .connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB, { useNewUrlParser: true })
     .then(() => {
-        console.log("DATABASE Connected");
-        return server.listen({ port: PORT });
+        console.log("MongoDB Connected");
+        return server.listen({ port: 5000 });
     })
     .then((res) => {
-        console.log(`Server running at ${res.url}`);
-    })
-    .catch((err) => {
-        console.error(err);
+        console.log(`Server running at ${res.url}`)
     });
